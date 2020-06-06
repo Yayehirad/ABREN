@@ -1,4 +1,5 @@
-#SEIRD model for Covid
+#SEIRD model for evaluating different estimates of R0
+
 #Step 1 load packages
 library(deSolve)
 
@@ -96,28 +97,53 @@ output_SEIRD=as.data.frame(lsoda(initial_values, times, SEIRD_fun, parameter_lis
 output_SEIRD$N_t<- output_SEIRD$S + output_SEIRD$E + output_SEIRD$I  + output_SEIRD$R +output_SEIRD$D 
 View(output_SEIRD)
 plot(output_SEIRD$time,output_SEIRD$N_t,type = 'l')
+####DATA
+#R0_mean
+Data_ro<- output_SEIRD[,c("time","I","D")]
+#R0_lower LImit
+Data_ro$I_r0_min<-output_SEIRD$I 
+Data_ro$D_r0_min<-output_SEIRD$D 
+#R0_upperlimit
+Data_ro$I_r0_max<-output_SEIRD$I 
+Data_ro$D_r0_max<-output_SEIRD$D
+
+View(Data_ro)
 
 #PLOT
- 
-plot(output_SEIRD$time,output_SEIRD$R,
-     ylim = c(0,4e+06),
+#PLOT infectious cases for each RO
+plot(Data_ro$time,Data_ro$I,
+     ylim = c(0,1e+06),
      type="n",
      xlab='Time in days',
-     ylab = 'Number of cases', main="Types of cases", panel.first= grid())
+     ylab = 'Number of cases', main="Infectious cases",
+     panel.first= grid())
 
-lines(output_SEIRD$time,output_SEIRD$S,lwd=2.5,col='blue')
-lines(output_SEIRD$time,output_SEIRD$E,lwd=2.5,col='darkorchid1')
-lines(output_SEIRD$time,output_SEIRD$I,lwd=3,col="red")
+lines(Data_ro$time,Data_ro$I,lwd=3,col='darkgreen')
+lines(Data_ro$time,Data_ro$I_r0_min,lwd=3,col='blue')
+lines(Data_ro$time,Data_ro$I_r0_max,lwd=3,col="red")
 
-lines(output_SEIRD$time,output_SEIRD$R,lwd=2.5,col = 'green')
-lines(output_SEIRD$time,output_SEIRD$D,lwd=2.5,col = 'black')
-legend('topright',c("Susceptible","Exposed",
-                    "Infectious",
-                   "Recoverd","Dead"),
-       lty=c(1,1,1,1,1),lwd=c(3,3,3,3.3),
-       col=c("blue",'darkorchid1',"red","green","black"))
+legend('topright',c("R0=3.85","R0=2.21",
+                    "R0=1.354"),
+       lty=c(1,1,1),lwd=c(3,3,3),
+       col=c("red","darkgreen",'blue'))
 
 
+#PLOT death for each RO
+plot(Data_ro$time,Data_ro$D,
+     ylim = c(0,1e+06),
+     type="n",
+     xlab='Time in days',
+     ylab = 'Number of deaths', main="Death",
+     panel.first= grid())
+
+lines(Data_ro$time,Data_ro$D,lwd=3,col='darkgreen')
+lines(Data_ro$time,Data_ro$D_r0_min,lwd=3,col='blue')
+lines(Data_ro$time,Data_ro$D_r0_max,lwd=3,col="red")
+
+legend('topright',c("R0=3.85","R0=2.21",
+                    "R0=1.354"),
+       lty=c(1,1,1),lwd=c(3,3,3),
+       col=c("red","darkgreen",'blue'))
 
 
 

@@ -1,4 +1,4 @@
-#SEII_hRD model for Covid for isolation from Exposedby contact tracing
+#SEII_hRD model for mask coverage 
 #Step 1 load packages
 library(deSolve)
 
@@ -61,7 +61,7 @@ beta = effective_contact_rate_per_infectious_per_time
 
 #Intervention 
 ##Face Mask
-C_M=0.0 #faceMask coverrage
+C_M=0.1 #faceMask coverrage
 E_M=0.3#faceMask efficacy
 ##Social distancing 
 S_D=1 # relative reduction in contact rate by social distancing
@@ -69,11 +69,11 @@ S_D=1 # relative reduction in contact rate by social distancing
 beta_intervention =beta*S_D*(1-C_M*E_M)
 
 ## contact tracing and case finding
-proportion_E_isolated=0.0 #contact tracing of exposed group
-proportion_I_isolated=0.0 #Case finding of Infectious group
+proportion_E_isolated=0.2 #contact tracing of exposed group
+proportion_I_isolated=0.2 #Case finding of Infectious group
 
 
-relative_infectiousness_of_isolated_compared_to_non_isolated_infectiopu=0.0
+relative_infectiousness_of_isolated_compared_to_non_isolated_infectiopu=0.2
 eta_ih=relative_infectiousness_of_isolated_compared_to_non_isolated_infectiopu
 
 sigma_ih = proportion_E_isolated*E_outflow 
