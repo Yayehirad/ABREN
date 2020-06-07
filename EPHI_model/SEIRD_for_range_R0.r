@@ -108,6 +108,8 @@ Data_ro$I_r0_max<-output_SEIRD$I
 Data_ro$D_r0_max<-output_SEIRD$D
 
 View(Data_ro)
+#save data as CSV
+write.csv(Data_ro,"R0_value_ranges")
 
 #PLOT
 #PLOT infectious cases for each RO

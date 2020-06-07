@@ -129,6 +129,9 @@ View(output_SEIIRD)
 #plot population and check it is Constant
 plot(output_SEIIRD$time,output_SEIIRD$N_t,type = 'l')
 
+#save data 
+write.csv(output_SEIIRD,"SEII_hRD_model.csv")
+
 #PLOT
 
 plot(output_SEIIRD$time,output_SEIIRD$R,

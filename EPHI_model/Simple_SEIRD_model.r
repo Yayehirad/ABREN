@@ -61,7 +61,7 @@ I_outflow_recovery_death = 1/infectious_period
 sigma = E_outflow 
 #mortality
 proportion_mortality_from_I=0.05
-delta= proportion_mortality_from_I*I_u_outflow_recovery_death
+delta= proportion_mortality_from_I*I_outflow_recovery_death
 #Recovery rate
 
 gamma = I_outflow_recovery_death-delta
@@ -96,6 +96,10 @@ output_SEIRD=as.data.frame(lsoda(initial_values, times, SEIRD_fun, parameter_lis
 output_SEIRD$N_t<- output_SEIRD$S + output_SEIRD$E + output_SEIRD$I  + output_SEIRD$R +output_SEIRD$D 
 View(output_SEIRD)
 plot(output_SEIRD$time,output_SEIRD$N_t,type = 'l')
+
+# Save data
+write.csv(output_SEIRD,"SEIRD_model.csv")
+
 
 #PLOT
  

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#SEIRD model for Covid\n#Step 1 load packages\nlibrary(deSolve)\n\n#define function\nSEIRD_fun<- function(current_timepoint, state_values, parameters)\n{\n  \n  #creat state variables (local variables)\n  S<-state_values[1] # Susceptible \n  E<-state_values[2] # Exposed\n  I<-state_values[3] #  Infectious\n  \n  R<-state_values[4] # Recovered \n  D<-state_values[5]#Died\n  with(\n    as.list(parameters), #variable names within parameters can be used\n    {\n      #compute derivative\n      \n      dS <- -beta*S*I/N\n      \n      dE <- beta*S*I/N- sigma*E\n      \n      dI <- sigma*E - gamma*I- delta*I\n      \n      dR <- gamma*I\n      dD<- delta*I\n      \n      \n      \n      #combine results\n      results=c(dS,dE,dI,dR,dD)\n      list(results)\n    }\n  )\n}\n\n\n\n\n#compartment durations\n\nincubation_period=5 \ninfectious_period=7 \n\n#force of infection\nR0=2.21 #mean 2.21, range 1.354-3.85\neffective_contact_rate_per_infectious_per_time= R0/infectious_period #\n\n\nbeta = effective_contact_rate_per_infectious_per_time\n\n\n# total outflows from compartments\nE_outflow = 1/incubation_period\n\nI_outflow_recovery_death = 1/infectious_period\n\n#progression rates from Exposed to Infectious\nsigma = E_outflow \n#mortality\nproportion_mortality_from_I=0.05\ndelta= proportion_mortality_from_I*I_outflow_recovery_death\n#Recovery rate\n\ngamma = I_outflow_recovery_death-delta\n\n\n\n\n#list parameters\n\nparameter_list<- c(beta=beta, \n                   sigma=sigma, \n                   delta=delta,\n                   gamma=gamma)\n#compartment population \nN=4e+06\nE0= N*0.0 #4000\nI0=N*0.00025 #1000\n\nR0=N*0 #200\nD0=0\nS0= N-(E0+I0+R0+D0)\n\ninitial_values <- c(S=S0,E=E0,\n                    I=I0,\n                    R=R0, D=D0)\ntimes=seq(0, 365, by = 1)\n\noutput_SEIRD=as.data.frame(lsoda(initial_values, times, SEIRD_fun, parameter_list))\n\n\n#Check total population N=4e+06\noutput_SEIRD$N_t<- output_SEIRD$S + output_SEIRD$E + output_SEIRD$I  + output_SEIRD$R +output_SEIRD$D \nView(output_SEIRD)\nplot(output_SEIRD$time,output_SEIRD$N_t,type = 'l')\n\n# Save data\nwrite.csv(output_SEIRD,\"SEIRD_model.csv\")\n\n\n#PLOT\n \nplot(output_SEIRD$time,output_SEIRD$R,\n     ylim = c(0,4e+06),\n     type=\"n\",\n     xlab='Time in days',\n     ylab = 'Number of cases', main=\"Types of cases\", panel.first= grid())\n\nlines(output_SEIRD$time,output_SEIRD$S,lwd=2.5,col='blue')\nlines(output_SEIRD$time,output_SEIRD$E,lwd=2.5,col='darkorchid1')\nlines(output_SEIRD$time,output_SEIRD$I,lwd=3,col=\"red\")\n\nlines(output_SEIRD$time,output_SEIRD$R,lwd=2.5,col = 'green')\nlines(output_SEIRD$time,output_SEIRD$D,lwd=2.5,col = 'black')\nlegend('topright',c(\"Susceptible\",\"Exposed\",\n                    \"Infectious\",\n                   \"Recoverd\",\"Dead\"),\n       lty=c(1,1,1,1,1),lwd=c(3,3,3,3.3),\n       col=c(\"blue\",'darkorchid1',\"red\",\"green\",\"black\"))\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1591412758064.000,
+    "dirty" : false,
+    "encoding" : "WINDOWS-1252",
+    "folds" : "",
+    "hash" : "1242625277",
+    "id" : "5C5C55B9",
+    "lastKnownWriteTime" : 1591514693,
+    "last_content_update" : 1591514693396,
+    "path" : "~/R-course/COVID19/Model from EPHI/ABREN/EPHI_model/Simple_SEIRD_model.r",
+    "project_path" : "Simple_SEIRD_model.r",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
