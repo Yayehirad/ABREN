@@ -61,7 +61,7 @@ I_outflow_recovery_death = 1/infectious_period
 sigma = E_outflow 
 #mortality
 proportion_mortality_from_I=0.05
-delta= proportion_mortality_from_I*I_u_outflow_recovery_death
+delta= proportion_mortality_from_I*I_outflow_recovery_death
 #Recovery rate
 
 gamma = I_outflow_recovery_death-delta
