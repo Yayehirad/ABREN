@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#estimate R0 for Addis Abeba\n#R0  estimation using a method given at https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/1472-6947-12-147#Sec17\n\nlibrary(R0)\n#read data\ndata_csv<-read.csv(file.choose())\nView(data_csv)\n\n#subset data for imported case is less than 15%\ndat<- data_csv[which(data_csv$Imported.Cases/data_csv$Daily.Cases<=0.15),]\nView(dat)\nlength(data_csv$new.cases) #number of report dates\n\n#Estimate R0\ndata(data_csv$new.cases)\ncheck.incid(data_csv$new.cases)\n\nmGT<-generation.time(\"gamma\",c(3.7, 0.85)) #c(5.5,2.8))#3-5\n#mGT<-generation.time(\"weibull\", c(75, 53.8))#3-5\ntime_dependent_R0 <- est.R0.TD(data_csv$new.cases, \n                #import = data_csv$Imported.Cases,\n                mGT, \n                begin=1, end=26,\n                q = c(0.025,0.975), \n                correct = TRUE, nsim = 100000, checked = FALSE)\n\n\nest.GT(serial.interval=data_csv$new.cases)\n\n\n#Plot daily R0\nplot(time_dependent_R0)\n# 95% CI for Ro\ntime_dependent_R0$conf.int\nmean(time_dependent_R0$conf.int$lower)#1.354, 1.322\nmean(time_dependent_R0$conf.int$upper)# 3.85, 3.23\n#R0 mean, max, min\nmean(time_dependent_R0$R)#1.650807, 1.800\n\nmax(time_dependent_R0$R) #5.22,6\nmin(time_dependent_R0$R)#0,0\n\n\n# R0 weekly\ntime_dependent_R0.weekly <- smooth.Rt(time_dependent_R0, 7)\ntime_dependent_R0.weekly\nplot(time_dependent_R0.weekly)\n\n\n\n##### simulate R0\n\n###data for R0\nView(data_R0)\ndata_R0<-output_SEI_pII_hRD[,c(\"time\",\"I\")]\ndata_R0$I_ll<-output_SEI_pII_hRD$I\ndata_R0$I_ul<-output_SEI_pII_hRD$I\n\n\n#PLOT infectious cases for each RO\nplot(data_R0$time,data_R0$I,\n     #ylim = c(0,5e+05),\n    # xlim = c(0,200),\n     type=\"n\",\n     xlab='Time',\n     ylab = 'Number of cases', main=\"No intervention\",\n     panel.first= grid())\n\nlines(data_R0$time,data_R0$I,lwd=3,col='darkgreen')\nlines(data_R0$time,data_R0$I_ll,lwd=3,col='blue')\nlines(data_R0$time,data_R0$I_ul,lwd=3,col=\"red\")\naxis.Date(1, at = seq(times[1], times[length(times)], by=\"month\"),\n          labels= seq(times[1], times[length(times)], by=\"month\"),\n          format=\"%d-%m-%Y\", las = 2)\n\nlegend('topright',c(\"Upper limit=3.85\",\"Average=2.21\",\n                    \"Lower limit=1.354\"),title = \"R0\",\n       lty=c(1,1,1),lwd=c(3,3,3),\n       col=c(\"red\",\"darkgreen\",'blue'))\n\n\n",
+    "created" : 1591773504911.000,
+    "dirty" : false,
+    "encoding" : "WINDOWS-1252",
+    "folds" : "",
+    "hash" : "3437485005",
+    "id" : "E515157D",
+    "lastKnownWriteTime" : 1592065329,
+    "last_content_update" : 1592065329618,
+    "path" : "~/R-course/COVID19/Model from EPHI/ABREN/EPHI_model/R0_estimation_from_incidence.r",
+    "project_path" : "R0_estimation_from_incidence.r",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

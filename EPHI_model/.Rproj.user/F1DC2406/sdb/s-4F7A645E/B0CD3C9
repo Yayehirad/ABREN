@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#Facemask only\n\n#data for Facemask comparison\nView(data_comparison)\ndata_comparison<-output_SEI_pII_hRD[,c(\"time\",\"I\",\"D\")]\ndata_comparison$I_cm_0.25<-output_SEI_pII_hRD$I\ndata_comparison$D_cm_0.25<-output_SEI_pII_hRD$D\ndata_comparison$I_cm_0.5<-output_SEI_pII_hRD$I\ndata_comparison$D_cm_0.5<-output_SEI_pII_hRD$D\ndata_comparison$I_cm_0.7<-output_SEI_pII_hRD$I\ndata_comparison$D_cm_0.7<-output_SEI_pII_hRD$D\n\n\n\n#PLOT\n\nplot(data_comparison$time,data_comparison$I,\n     #ylim = c(0,4e+06),\n     #xlim = c(0,200),\n     type=\"n\",\n     xlab='Time in days',\n     ylab = 'Number of cases', main=\"Facemask complience, efficacy=30%\", panel.first= grid())\n\nlines(data_comparison$time,data_comparison$I,lwd=3,col='red')\nlines(data_comparison$time,data_comparison$I_cm_0.25,lwd=3,col=\"orange\")\nlines(data_comparison$time,data_comparison$I_cm_0.5,lwd=3,col='magenta')\nlines(data_comparison$time,data_comparison$I_cm_0.7,lwd=3,col='blue')\nlegend('topright',c(\"0%\",\"25%\",\"50%\",\n                    \"70%\"),title = \"Facemask coverage\",\n       lty=c(1,1,1,1),lwd=c(3,3,3,3),\n       col=c(\"red\",'orange','magenta',\"blue\"))\n\n",
+    "created" : 1591832604743.000,
+    "dirty" : false,
+    "encoding" : "WINDOWS-1252",
+    "folds" : "",
+    "hash" : "4003419936",
+    "id" : "B0CD3C9",
+    "lastKnownWriteTime" : 1591834728,
+    "last_content_update" : 1591834728628,
+    "path" : "~/R-course/COVID19/Model from EPHI/ABREN/EPHI_model/Facemask_only.r",
+    "project_path" : "Facemask_only.r",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

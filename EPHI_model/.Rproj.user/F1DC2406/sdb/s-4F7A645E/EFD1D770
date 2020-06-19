@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#Facemask=70%, Preclinical isolation = 25% and social distancing\n\nView(data_socialDistancing)\ndata_socialDistancing<-output_SEI_pII_hRD[,c(\"time\",\"I\")]\ndata_socialDistancing$I_0.1<-output_SEI_pII_hRD$I\ndata_socialDistancing$D_0.1<-output_SEI_pII_hRD$D\n\ndata_socialDistancing$I_0.2<-output_SEI_pII_hRD$I\ndata_socialDistancing$D_0.2<-output_SEI_pII_hRD$D\n\ndata_socialDistancing$I_0.3<-output_SEI_pII_hRD$I\ndata_socialDistancing$D_0.3<-output_SEI_pII_hRD$D\n\n#plot\nplot(data_socialDistancing$time,data_socialDistancing$I_0.3,\n     #ylim = c(0,2.5e+05),\n     #xlim = c(0,200),\n     type=\"n\",\n     xlab='Time in days',\n     ylab = 'Number of cases', main=\"Social distancing =30%, isolation=25%,facemask=70%\",\n     panel.first= grid())\n\nlines(data_socialDistancing$time,data_socialDistancing$I,lwd=3,col='red')\nlines(data_socialDistancing$time,data_socialDistancing$I_0.1,lwd=3,col='magenta')\nlines(data_socialDistancing$time,data_socialDistancing$I_0.2,lwd=3,col=\"blue\")\nlines(data_socialDistancing$time,data_socialDistancing$I_0.3,lwd=3,col=\"green\")\n\nlegend('topright',c(\"0%\",\"10%\",\n                    \"20%\",\"30%\"),\n       lty=c(1,1,1,1),lwd=c(3,3,3,3),title=\"SD effectivness\",\n       col=c(\"red\",'magenta',\"blue\",\"green\"))\n\n\n\n\n\n#### time to dates\n\n",
+    "created" : 1591834847616.000,
+    "dirty" : false,
+    "encoding" : "WINDOWS-1252",
+    "folds" : "",
+    "hash" : "3095550873",
+    "id" : "EFD1D770",
+    "lastKnownWriteTime" : 1591856997,
+    "last_content_update" : 1591856997308,
+    "path" : "~/R-course/COVID19/Model from EPHI/ABREN/EPHI_model/SocialDistancing&fm&isolation.r",
+    "project_path" : "SocialDistancing&fm&isolation.r",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

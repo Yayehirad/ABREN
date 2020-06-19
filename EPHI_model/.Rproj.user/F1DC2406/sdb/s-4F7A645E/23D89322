@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "### Testing preclinical Facemask 70%\nView(data_testing)\ndata_testing<-output_SEI_pII_hRD[,c(\"time\",\"I\")]\ndata_testing$I_0.1<-output_SEI_pII_hRD$I\ndata_testing$D_0.1<-output_SEI_pII_hRD$D\n\ndata_testing$I_0.15<-output_SEI_pII_hRD$I\ndata_testing$D_0.15<-output_SEI_pII_hRD$D\n\ndata_testing$I_0.2<-output_SEI_pII_hRD$I\ndata_testing$D_0.2<-output_SEI_pII_hRD$D\n\ndata_testing$I_0.25<-output_SEI_pII_hRD$I\ndata_testing$D_0.25<-output_SEI_pII_hRD$D\n#PLOT infectious cases for each I_p isolated\nplot(data_testing$time,data_testing$I,\n     #ylim = c(0,2.5e+05),\n     #xlim = c(0,200),\n     type=\"n\",\n     xlab='Time in days',\n     ylab = 'Number of cases', main=\"Isolation at pre-clinical stage,facemask=70%\",\n     panel.first= grid())\n\nlines(data_testing$time,data_testing$I,lwd=3,col='red')\nlines(data_testing$time,data_testing$I_0.1,lwd=3,col='orange')\nlines(data_testing$time,data_testing$I_0.15,lwd=3,col=\"magenta\")\nlines(data_testing$time,data_testing$I_0.25,lwd=3,col=\"blue\")\n\nlegend('topright',c(\"0%\",\"10%\",\n                    \"15%\",\"25%\"),\n       lty=c(1,1,1,1),lwd=c(3,3,3,3),title=\"Percentage of isolation\",\n       col=c(\"red\",\"orange\",'magenta',\"blue\"))\n\n\n\n",
+    "created" : 1591760975019.000,
+    "dirty" : false,
+    "encoding" : "WINDOWS-1252",
+    "folds" : "",
+    "hash" : "1682558511",
+    "id" : "23D89322",
+    "lastKnownWriteTime" : 1591834753,
+    "last_content_update" : 1591834753871,
+    "path" : "~/R-course/COVID19/Model from EPHI/ABREN/EPHI_model/Facemask&testing.r",
+    "project_path" : "Facemask&testing.r",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

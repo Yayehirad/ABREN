@@ -42,7 +42,7 @@ SEIRD_fun<- function(current_timepoint, state_values, parameters)
 #compartment durations
 
 incubation_period=5 
-infectious_period=7 
+infectious_period=7
 
 #force of infection
 R0=2.21 #mean 2.21, range 1.354-3.85
@@ -76,9 +76,9 @@ parameter_list<- c(beta=beta,
                    delta=delta,
                    gamma=gamma)
 #compartment population 
-N=4e+06
+N=3.38457e+06#4e+06
 E0= N*0.0 #4000
-I0=N*0.00025 #1000
+I0=1344#N*0.00025 #1000
 
 R0=N*0 #200
 D0=0
@@ -96,7 +96,9 @@ output_SEIRD=as.data.frame(lsoda(initial_values, times, SEIRD_fun, parameter_lis
 output_SEIRD$N_t<- output_SEIRD$S + output_SEIRD$E + output_SEIRD$I  + output_SEIRD$R +output_SEIRD$D 
 View(output_SEIRD)
 plot(output_SEIRD$time,output_SEIRD$N_t,type = 'l')
-
+##
+Incidence=as.data.frame(diff(output_SEIRD$I))
+View(Incidence)
 # Save data
 write.csv(output_SEIRD,"SEIRD_model.csv")
 

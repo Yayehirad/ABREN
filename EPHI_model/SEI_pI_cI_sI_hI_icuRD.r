@@ -27,11 +27,11 @@ SEI_pI_cI_sI_hI_icuRD<- function(current_timepoint, state_values, parameters)
       
       dI_p<- epsilon*E - alpha_ip*I_p - sigma_ic*I_p - sigma_is*I_p
       
-      dI_s<- sigma_is*I_p - alpha_is*I_s - gamma_is*I_s
+      dI_s<- sigma_is*I_p - gamma_is*I_s
       
       dI_c <- sigma_ic*I_p - gamma_ic*I_c - delta_ic*I_c - phi_ic*I_c 
       
-      dI_h <- alpha_ip*I_p + phi_ic*I_c +alpha_is*I_s - gamma_ih*I_h - nu_h*I_h
+      dI_h <- alpha_ip*I_p + phi_ic*I_c - gamma_ih*I_h - nu_h*I_h
       
       dI_icu<-  nu_h*I_h - gamma_icu*I_icu - delta_icu*I_icu
       
@@ -53,11 +53,11 @@ SEI_pI_cI_sI_hI_icuRD<- function(current_timepoint, state_values, parameters)
 
 #compartment durations
 
-incubation_period=3 
-preclinical_infectious_period=3
-infectious_period=7 
-isolation_stay= 10
-ICU_stay=20
+incubation_period=5  #5-6 days (max 14 days)
+preclinical_infectious_period=2 #1-3 days
+infectious_period=7 #First 3-days from onset of symptoms
+isolation_stay= 12 #12 days (7–16)
+ICU_stay=7#7 (4-11) days
 
 # total outflows from compartments
 E_outflow = 1/incubation_period
@@ -72,8 +72,6 @@ effective_contact_rate_per_infectious_per_time= R0/infectious_period #
 
 
 beta = effective_contact_rate_per_infectious_per_time
-###
-proportion_Subclinical_cases=0.0
 
 
 #INTERVENTIONS
@@ -91,14 +89,14 @@ beta_intervention =beta*S_D*(1-C_M*E_M)
 ## contact tracing and case finding
 proportion_I_p_isolated=0.0 #contact tracing and testing of presymptomatic infectious group
 proportion_I_c_isolated=0.0 #Case finding of Infectious group
-proportion_I_s_isolated=0.0 #Testing to find Subclinical cases
+#proportion_I_s_isolated=0.0 #Testing to find Subclinical cases
 
 
 
 relative_infectiousness_of_Preclinical_compared_to_non_isolated_Clinical=0.5
-relative_infectiousness_of_Subclinical_compared_to_non_isolated_Clinical=0.5
+relative_infectiousness_of_Subclinical_compared_to_non_isolated_Clinical=0.2
 relative_infectiousness_of_Isolated_compared_to_non_isolated_Clinical=0.0
-relative_infectiousness_of_ICU_compared_to_non_isolated_Clinical=0.5
+relative_infectiousness_of_ICU_compared_to_non_isolated_Clinical=0.0
 
 eta_ip = relative_infectiousness_of_presympthomatic_compared_to_non_isolated_infectious
 eta_is = relative_infectiousness_of_Subclinical_compared_to_non_isolated_Clinical
@@ -106,15 +104,18 @@ eta_ih = relative_infectiousness_of_isolated_compared_to_non_isolated_infectious
 eta_icu = relative_infectiousness_of_ICU_compared_to_non_isolated_Clinical
 
 alpha_ip = proportion_I_p_isolated*I_p_outflow 
-alpha_is = proportion_I_s_isolated*I_s_outflow 
+#alpha_is = proportion_I_s_isolated*I_s_outflow 
+###
+
 
 phi_ic= proportion_I_c_isolated*I_c_outflow
 
 #progression
+proportion_Subclinical_cases=0.3
 epsilon=E_outflow
 
 sigma_is = proportion_Subclinical_cases*(I_p_outflow-alpha_ip)
-sigma_ic= I_p_outflow - sigma_is
+sigma_ic= I_p_outflow - sigma_is - alpha_ip
 
 # proportion of critical cases, ICU
 proportion_I_h_requiring_ICU=0.08
@@ -123,12 +124,12 @@ nu_ih=proportion_I_h_requiring_ICU*I_h_outflow
 
 
 #mortality
-proportion_mortality_from_I=0.05
+proportion_mortality_from_I_c=0.05
 
 proportion_mortality_from_I_icu=0.5
 
 
-delta_ic= proportion_mortality_from_I*(I_c_outflow-phi_ic)
+delta_ic= proportion_mortality_from_I_c*(I_c_outflow-phi_ic)
 
 delta_icu =proportion_mortality_from_I_icu*I_icu_outflow
 
@@ -138,7 +139,7 @@ gamma_ic = I_c_outflow - delta_ic - phi_ic
 
 gamma_ih =I_h_outflow - nu_ih
 
-gamma_is= I_s_outflow - alpha_is
+gamma_is= I_s_outflow 
 
 gamma_icu=I_icu_outflow - delta_icu
 
@@ -185,23 +186,25 @@ View(output)
 plot(output$time,output$N_t,type = 'l')
 
 #save data 
-write.csv(output_SEI_pII_hRD,"SEI_pII_hRD_model.csv")
+write.csv(output,"final_model.csv")
 
 #PLOT
 
-plot(output_SEI_pII_hRD$time,output_SEI_pII_hRD$R,
+plot(output$time,output$R,
      ylim = c(0,4e+06),
      type="n",
      xlab='Time in days',
      ylab = 'Number of cases', main="Types of cases", panel.first= grid())
 
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$S,lwd=2.5,col='blue')
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$E,lwd=2.5,col='darkorchid1')
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$I-p,lwd=2.5,col='darksalmon')
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$I,lwd=3,col="red")
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$I_h,lwd=3,col="orange")
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$R,lwd=2.5,col = 'green')
-lines(output_SEI_pII_hRD$time,output_SEI_pII_hRD$D,lwd=2.5,col = 'black')
+lines(output$time,output$S,lwd=2.5,col='blue')
+lines(output$time,output$E,lwd=2.5,col='darkorchid1')
+lines(output$time,output$I_p,lwd=2.5,col='darksalmon')
+lines(output$time,output$I_c,lwd=3,col="red")
+lines(output$time,output$I_s,lwd=3,col="orange")
+lines(output$time,output$I_h,lwd=3,col="darkorange")
+lines(output$time,output$I_icu,lwd=3,col="darkgreen")
+lines(output$time,output$R,lwd=2.5,col = 'green')
+lines(output$time,output$D,lwd=2.5,col = 'black')
 legend('topright',c("Susceptible","Exposed","Pre-symptomatic",
                     "Infectious","Isolated infectious",
                     "Recoverd","Dead"),
